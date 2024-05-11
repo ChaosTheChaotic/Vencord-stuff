@@ -1,0 +1,25 @@
+.potato {
+    position: absolute;
+    z-index: 9999;
+    width: 500px;
+    height: 500px;
+    background-image: var(--potato-background-url, url('https://raw.githubusercontent.com/ChaosShadowGod/TheCookie/main/potato/potato.svg'));
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    animation: rotation 2s infinite linear;
+    user-select: none; /* Standard syntax */
+    -moz-user-select: none; /* Firefox */
+    -webkit-user-select: none; /* Chrome, Safari, and Opera */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    -webkit-touch-callout: none; /* IDK anymore, need sleep.. */
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(359deg);
+      }
+    }
