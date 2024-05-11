@@ -1,1 +1,1 @@
-# TheCookie
+# Vencord plugins
