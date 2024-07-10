@@ -1,7 +1,6 @@
 //keep in mind this ruins your frequently used emojis and if you use special characters or numbers in your text they wont appear and will
 //cause a rate limit so dont spam them too much or you will risk account suspension or worse (dont say i didnt warn you) and excuse the bad code
 
-import { addContextMenuPatch, findGroupChildrenByChildId, NavContextMenuPatchCallback, removeContextMenuPatch } from "@api/ContextMenu";
 import definePlugin from "@utils/types";
 import { Button, Menu, Switch, Text, UploadHandler, useEffect, useState } from "@webpack/common";
 import { addButton, removeButton } from "@api/MessagePopover";
@@ -11,7 +10,7 @@ import { classes } from "@utils/misc";
 import { Logger } from "@utils/Logger";
 import { SVGProps } from "react";
 import { ModalCloseButton, ModalContent, ModalHeader, ModalProps, ModalRoot, ModalSize, openModal } from "@utils/modal";
-import { range } from "lodash";
+import { findByCode } from "@webpack";
 
 const logger = new Logger("TextReact");
 
@@ -61,7 +60,7 @@ function sleep(ms: number) {
 
 function convertToRegionalIndicators(text: string) {
     const regionalIndicators = new Map<string, string[]>([
-        ["a", ["\uD83C\uDDE6"]],
+        ["a", ["\uD83C\uDDE6", "\uD83C\uDD70"]],
         ["b", ["\uD83C\uDDE7", "\uD83C\uDD71"]],
         ["c", ["\uD83C\uDDE8", "©"]],
         ["d", ["\uD83C\uDDE9"]],
@@ -128,7 +127,7 @@ function convertToRegionalIndicators(text: string) {
     async function addReactionsWithDelay(channelId, messageId, reactions) {
         for (const reaction of reactions) {
             await sleep(1000); // Wait for 1 second before adding each reaction
-            window.Vencord.Webpack.findByProps("addReaction").addReaction(channelId, messageId, { name: reaction, animated: false });
+            findByCode(".userHasReactedWithEmoji")(channelId, messageId, { name: reaction });
         }
     }
 
@@ -146,8 +145,9 @@ function OpenWindow(props: ModalProps & { message: any; onClose: () => void }) {
         const channel = ChannelStore.getChannel(message.channel_id);
         const regionalText = convertToRegionalIndicators(inputText);
         const reactionList = [...regionalText];
+        await props.onClose();
         await addReactionsWithDelay(channel.id, message.id, reactionList);
-        props.onClose();
+        // await props.onClose();
     };
 
 
